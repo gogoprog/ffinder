@@ -74,7 +74,13 @@ void MainDialog::fillList()
 {
     listWidget->clear();
     fileLister.applyFilter();
-    listWidget->addItems(fileLister.getStringList());
+
+    for( int i = 0; i < fileLister.getFileCount(); ++i )
+    {
+        const QFileInfo & file_info = fileLister.getFileInfo( i );
+        QListWidgetItem * item = new QListWidgetItem( file_info.fileName(), listWidget );
+        item->setToolTip( file_info.filePath() );
+    }
 }
 
 void MainDialog::openFile(const QFileInfo & fileInfo) const

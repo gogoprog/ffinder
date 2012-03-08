@@ -13,7 +13,6 @@ public:
     FileLister();
     ~FileLister();
     
-    QStringList & getStringList() { return stringList; }
     const QFileInfo & getFileInfo(int index) { return fileList[index]; }
     const QString & getString(int index) { return stringList[index]; }
     int getFileCount() const { return stringList.size(); }
