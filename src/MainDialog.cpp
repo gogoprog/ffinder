@@ -11,6 +11,7 @@
 #include <QPushButton>
 #include <QMessageBox>
 #include <QDebug>
+#include <QProcess>
 
 // Public:
 
@@ -80,10 +81,10 @@ void MainDialog::openFile(const QFileInfo & fileInfo) const
 {
     QString command;
 
-    command = Settings::getInstance().getLauncherForExtension(fileInfo.completeSuffix()) + " " + fileInfo.filePath() + " &";
+    command = Settings::getInstance().getLauncherForExtension(fileInfo.completeSuffix());
 
     qDebug() << command << "\n";
-    system(command.toStdString().c_str());
+    QProcess::startDetached(command, QStringList(fileInfo.filePath()));
 }
 
 void MainDialog::initializeRootList()
