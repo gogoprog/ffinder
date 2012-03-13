@@ -12,8 +12,32 @@
 #include <QMessageBox>
 #include <QDebug>
 #include <QProcess>
+#include <QUrl>
 
 // Public:
+
+class CustomListWidget : public QListWidget
+{
+    public :
+        CustomListWidget( QWidget * parent = 0 ) : QListWidget( parent ) {}
+    protected :
+        QStringList mimeTypes() const
+        {
+            QStringList qstrList;
+            qstrList.append("text/uri-list");
+            return qstrList;
+        }
+        QMimeData * mimeData( const QList<QListWidgetItem *> items ) const
+        {
+            QMimeData *data = new QMimeData();
+            QList< QUrl > urls;
+            QUrl url;
+            url.setPath( items[ 0 ]->toolTip() );
+            urls.append( url );
+            data->setUrls( urls );
+            return data;
+        }
+};
 
 MainDialog::MainDialog(QWidget *parent, Qt::WFlags flags)
 : QDialog(parent, flags)
@@ -28,7 +52,7 @@ MainDialog::MainDialog(QWidget *parent, Qt::WFlags flags)
     about_button->setMaximumWidth(20);
     
     rootList = new QComboBox(this);
-    listWidget = new QListWidget(this);
+    listWidget = new CustomListWidget(this);
     lineInput = new QLineEdit(this);
 
     rootList->clear();
@@ -58,6 +82,8 @@ MainDialog::MainDialog(QWidget *parent, Qt::WFlags flags)
 
     fileLister.initialize(Settings::getInstance().getLastRoot());
     fillList();
+
+    listWidget->setDragEnabled( true );
 }
 
 MainDialog::~MainDialog()
