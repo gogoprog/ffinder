@@ -28,6 +28,7 @@ OptionsDialog::OptionsDialog(QWidget *parent, Qt::WFlags flags)
 
     this->setWindowTitle("ffinder - Options");
     this->resize( 500, 500 );
+    this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
     launchersTextEdit = new QTextEdit(this);
     directoriesTextEdit = new QTextEdit(this);

@@ -42,6 +42,8 @@ class CustomListWidget : public QListWidget
 MainDialog::MainDialog(QWidget *parent, Qt::WFlags flags)
 : QDialog(parent, flags)
 {
+    this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
+
     QVBoxLayout *v_layout = new QVBoxLayout(this);
     QHBoxLayout *bottom_h_layout = new QHBoxLayout();
     QPushButton *options_button = new QPushButton("Options");
