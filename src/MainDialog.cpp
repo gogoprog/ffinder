@@ -188,24 +188,6 @@ void MainDialog::inputTextEdited(const QString &text)
     userRegExp.setPattern(text);
 }
 
-void MainDialog::currentRowChanged(int currentRow)
-{
-    if (currentRow == -1 )
-        return;
-        
-    const QString & newString = fileLister.getString(currentRow);
-    int index;
-
-    index = newString.indexOf(userRegExp);
-    index += userRegExp.matchedLength();
-
-    Q_ASSERT(index != -1);
-    
-    lineInput->setText(newString);
-    
-    lineInput->setSelection(index, newString.size() - index);   
-}
-
 void MainDialog::optionsButtonClicked()
 {
     OptionsDialog options_dialog;

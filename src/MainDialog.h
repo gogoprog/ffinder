@@ -30,7 +30,6 @@ protected:
 private slots:
     void returnPressed();
     void inputTextEdited(const QString &text);
-    void currentRowChanged(int currentRow);
     void optionsButtonClicked();
     void aboutButtonClicked();
     void rootChanged(const QString & text);
