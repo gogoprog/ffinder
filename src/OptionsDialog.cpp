@@ -27,7 +27,7 @@ OptionsDialog::OptionsDialog(QWidget *parent, Qt::WFlags flags)
     QGroupBox *group2 = new QGroupBox("Launchers");
 
     this->setWindowTitle("ffinder - Options");
-    this->setGeometry(0,0,500,500);
+    this->resize( 500, 500 );
 
     launchersTextEdit = new QTextEdit(this);
     directoriesTextEdit = new QTextEdit(this);
