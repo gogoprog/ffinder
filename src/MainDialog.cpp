@@ -82,7 +82,7 @@ MainDialog::MainDialog(QWidget *parent, Qt::WFlags flags)
     initializeRootList();
     connect(rootList, SIGNAL(currentIndexChanged(const QString &)), this, SLOT(rootChanged(const QString &)));
 
-    fileLister.initialize(Settings::getInstance().getLastRoot());
+    fileLister.initialize(Settings::getInstance().getRootTable()[ rootList->currentText() ]);
     fillList();
 
     listWidget->setDragEnabled( true );
@@ -123,14 +123,13 @@ void MainDialog::openFile(const QFileInfo & fileInfo) const
 
 void MainDialog::initializeRootList()
 {
-    QMapIterator<QString, QString> iterator(Settings::getInstance().getRootTable());
     int index = 0;
     int indexToSelect = 0;
 
     rootList->clear();
- 
-    while (iterator.hasNext()) {
-        iterator.next();
+
+    for( Settings::rootTable_t::const_iterator iterator = Settings::getInstance().getRootTable().constBegin(); iterator != Settings::getInstance().getRootTable().constEnd(); ++iterator )
+    {
         rootList->addItem(iterator.key());
         
         if(iterator.key() == Settings::getInstance().getLastRootKey())

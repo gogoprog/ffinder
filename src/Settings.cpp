@@ -10,6 +10,7 @@
 typedef QMap<QString,QString> QStringMap;
 
 Q_DECLARE_METATYPE(QStringMap);
+Q_DECLARE_METATYPE(Settings::rootTable_t);
 
 Settings & Settings::getInstance()
 {
@@ -22,9 +23,12 @@ void Settings::initialize()
     qRegisterMetaType<QStringMap>("QStringMap");
     qRegisterMetaTypeStreamOperators<QStringMap>("QStringMap");
 
+    qRegisterMetaType<rootTable_t>("rootTable_t");
+    qRegisterMetaTypeStreamOperators<rootTable_t>("rootTable_t");
+
     QSettings settings(COMPANY, APPNAME);
 
-    rootTable = settings.value("rootTable").value<QStringMap>();
+    rootTable = settings.value("rootTable").value<rootTable_t>();
     launcherTable = settings.value("launcherTable").value<QStringMap>();
 
     lastRootKey = settings.value("lastRootKey").toString();
@@ -55,7 +59,7 @@ void Settings::saveLauncherTable(const QMap<QString,QString> & launcher_table)
     settings.setValue("launcherTable",qVariantFromValue(launcherTable));
 }
 
-void Settings::saveRootTable(const QMap<QString,QString> & root_table)
+void Settings::saveRootTable(const Settings::rootTable_t & root_table)
 {
     QSettings settings(COMPANY, APPNAME);
 

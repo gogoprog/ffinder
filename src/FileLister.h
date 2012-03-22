@@ -17,7 +17,7 @@ public:
     const QString & getString(int index) { return stringList[index]; }
     int getFileCount() const { return stringList.size(); }
     void setFilter(const QString & _filter) { filter = _filter; }
-    void initialize(const QString & path);
+    void initialize(const QVector< QString > & filters);
     void applyFilter();
 
 private:

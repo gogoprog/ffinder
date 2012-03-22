@@ -1,6 +1,7 @@
 #include "FileLister.h"
 
 #include <QDirIterator>
+#include <QtDebug>
 #include "Settings.h"
 
 bool simpleSort(const QFileInfo &file1, const QFileInfo &file2)
@@ -18,18 +19,33 @@ FileLister::~FileLister()
     
 }
 
-void FileLister::initialize(const QString & path)
+void FileLister::initialize(const QVector< QString > & filters)
 {
-    QDirIterator directory_walker(path, QDir::Files | QDir::NoSymLinks, QDirIterator::Subdirectories);
-
     completeFileList.clear();
 
-    while(directory_walker.hasNext()) {
-        directory_walker.next();
-        const QString suffix = directory_walker.fileInfo().completeSuffix();
-        foreach(const QString & extension, Settings::getInstance().getExtensionTable()) {
-            if(suffix == extension)
+    foreach( const QString & filter, filters )
+    {
+        QRegExp exp( "^([\\+\\-])(.*) \\((.*)\\)$" );
+        if( exp.indexIn( filter ) < 0 )
+        {
+            qWarning() << "invalid filter [" << filter << "]";
+            continue;
+        }
+
+        const bool add = ( exp.cap( 1 ) == "+" );
+        QDirIterator directory_walker(exp.cap( 2 ), QString( exp.cap( 3 ) ).split(' '), QDir::Files | QDir::NoSymLinks, QDirIterator::Subdirectories);
+
+        while(directory_walker.hasNext()) {
+            directory_walker.next();
+
+            if( add )
+            {
                 completeFileList.push_back(directory_walker.fileInfo());
+            }
+            else
+            {
+                completeFileList.removeOne(directory_walker.fileInfo());
+            }
         }
     }
 

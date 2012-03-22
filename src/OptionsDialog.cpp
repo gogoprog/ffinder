@@ -96,32 +96,33 @@ void OptionsDialog::fillTextEdit()
     }
 
     {
-        QMapIterator<QString, QString> iterator(Settings::getInstance().getRootTable());
-        QString line;
-        
         directoriesTextEdit->clear();
-        
-        while (iterator.hasNext()) {
-            iterator.next();
-            line = iterator.key() + "=" + iterator.value();
-            directoriesTextEdit->append(line);
+        const Settings::rootTable_t & root_table = Settings::getInstance().getRootTable();
+
+        for( Settings::rootTable_t::const_iterator root_iterator = root_table.constBegin(); root_iterator != root_table.constEnd(); ++root_iterator )
+        {
+            directoriesTextEdit->append( QString("[") + root_iterator.key() + QString("]") );
+
+            for( Settings::rootTable_t::mapped_type::const_iterator path_iterator = root_iterator.value().constBegin(); path_iterator != root_iterator.value().constEnd(); ++path_iterator )
+            {
+                directoriesTextEdit->append(*path_iterator);
+            }
         }
     }
 }
 
 bool OptionsDialog::saveSettings()
 {
-    QMap<QString,QString> data_table;
-
-    if (parseText(data_table, directoriesTextEdit->toPlainText()))
-        Settings::getInstance().saveRootTable(data_table);
+    Settings::rootTable_t root_table;
+    if (parseText(root_table, directoriesTextEdit->toPlainText()))
+        Settings::getInstance().saveRootTable(root_table);
     else {
         QMessageBox::critical(this, "ffinder - Error", "Cannot parse directories." );
         return false;
     }
 
-    data_table.clear();
-    
+    QMap<QString,QString> data_table;
+
     if (parseText(data_table, launchersTextEdit->toPlainText()) )
         Settings::getInstance().saveLauncherTable(data_table);
     else {
@@ -139,11 +140,38 @@ bool OptionsDialog::parseText(QMap<QString,QString> & data_table, const QString 
     QStringList lines = text.split("\n");
 
     foreach(const QString line, lines) {
+
+        QRegExp exp( "^\\[(.*)\\]$" );
+        if( exp.indexIn( line ) > -1 )
+        {
+            QMessageBox::information( this, "toto", exp.cap( 1 ) );
+        }
+
         QStringList strings = line.split("=");
         if (strings.size() <= 1)
             return false;
         data_table.insert(strings[0], strings[1]);
     }
     
+    return true;
+}
+
+bool OptionsDialog::parseText(Settings::rootTable_t & data_table, const QString & text)
+{
+    QStringList lines = text.split("\n");
+    QString key;
+
+    foreach(const QString line, lines) {
+
+        QRegExp exp( "^\\[(.*)\\]$" );
+        if( exp.indexIn( line ) > -1 )
+        {
+            key = exp.cap( 1 );
+            continue;
+        }
+
+        data_table[ key ].append( line );
+    }
+
     return true;
 }

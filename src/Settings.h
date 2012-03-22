@@ -9,28 +9,33 @@
 class Settings
 {
 public:
+
+    typedef QMap<QString, QVector< QString > > rootTable_t;
+
     static Settings & getInstance();
     void initialize();
     const QString getLauncherForExtension(const QString &extension) const;
     const QMap<QString,QString> & getLauncherTable() const {
         return launcherTable;
     }
-    const QMap<QString,QString> & getRootTable() const {
+    const rootTable_t & getRootTable() const {
         return rootTable;
     }
     const QString & getLastRootKey() const {
         return lastRootKey;
     }
+    /*
     const QString getLastRoot() const {
         return rootTable[lastRootKey];
     }
+    */
     const QStringList & getExtensionTable() const {
         return extensionTable;
     }
 
     void saveMainDialogGeometry(QDialog *dialog);
     void saveLauncherTable(const QMap<QString,QString> & launcher_table);
-    void saveRootTable(const QMap<QString,QString> & root_table);
+    void saveRootTable(const rootTable_t & root_table);
     void saveLastRootKey(const QString & key);
     void loadMainDialogGeometry(QDialog *dialog);
     void refreshTables();
@@ -38,7 +43,7 @@ public:
 private:
     
     QMap<QString,QString> launcherTable;
-    QMap<QString,QString> rootTable;
+    rootTable_t rootTable;
     QStringList extensionTable;
     QString lastRootKey;
 };

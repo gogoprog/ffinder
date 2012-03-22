@@ -7,6 +7,8 @@
 #include <QMap>
 #include <QString>
 
+#include "Settings.h"
+
 class OptionsDialog : public QDialog
 {
     Q_OBJECT
@@ -25,6 +27,7 @@ private:
     void fillTextEdit();
     bool saveSettings();
     bool parseText(QMap<QString,QString> & data_table, const QString & text);
+    bool parseText(Settings::rootTable_t & data_table, const QString & text);
 
     QTextEdit *launchersTextEdit;
     QTextEdit *directoriesTextEdit;
