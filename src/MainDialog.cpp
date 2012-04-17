@@ -117,8 +117,11 @@ void MainDialog::openFile(const QFileInfo & fileInfo) const
 
     command = Settings::getInstance().getLauncherForExtension(fileInfo.completeSuffix());
 
+    command += " ";
+    command += fileInfo.filePath();
+
     qDebug() << command << "\n";
-    QProcess::startDetached(command, QStringList(fileInfo.filePath()));
+    QProcess::startDetached(command);
 }
 
 void MainDialog::initializeRootList()
